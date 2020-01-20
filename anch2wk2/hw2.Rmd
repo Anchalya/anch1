@@ -56,6 +56,7 @@ t.test(catch1, catch2, paired=TRUE, conf.level=0.95)
 ```{r}
 #E)Explicitly state the critical and observed value of the test statistic.
 qt(0.95,13)
+#the critcal value is 1.770933 and the observed tvalue is 6.3808
 ```
 
 ```{r}
@@ -98,6 +99,7 @@ t.test(data2$TotalPhos, mu=15)
 ```{r}
 #E)Explicitly state the critical and observed value of the test statistic.
 qt(0.975,9)
+#the critcal value is 2.262157 and the observed t-value is 1.8462
 ```
 
 ```{r}
@@ -144,6 +146,7 @@ hist(stinky$vegetarian,
 ```{r}
 #e) Explicitly state the critical and observed value of the test statistic.
 qt(0.95,27.862)
+#the critical value is 1.701419 and the observed t-value is 12.237
 ```
 
 ```{r}
@@ -154,26 +157,42 @@ qt(0.95,27.862)
 Scenario 4
 ```{r}
 #a) State the null and alternative hypotheses? 
+#HO: There is no interaction between symptoms and the
+#trophic level of the individual in question
+#HA: There is a an interaction between symptoms and the
+#trophic level of the individual in question
 ```
 
 ```{r}
 #b) Create a histogram of the data. 
-mydat=read.csv('thing.csv') 
+troph=c(133,100,17,250)
+toppredator=c(4,61,35,100)
+dat=data.frame('C'=troph,'NC'=toppredator)
+dat
+hist(dat$C)
+hist(dat$NC)
 ```
 
 ```{r}
 #c) Explain what type of test should be used to test the hypothesis.
+#The tpe of test that should be used to test the hypothesis is Chi-squared #test. A Chi-squared test is used to test for independence among categorical #variables. 
 ```
 
 ```{r}
 #d) Run the appropriate test, and display the summary output.
+chisq.test(dat)
 ```
 
 ```{r}
 #e) Explicitly state the critical and observed value of the test statistic.
+qchisq(0.95,3)
+#the Critical value is 7.814728
+#The observed value is x-squared=89.253
 ```
 
 ```{r}
 #f) Indicate what conclusion you would draw from the hypothesis test.
+#because the pvalue is less than 0.05, the null hypthesis will be rejected. Therefore, here is a an interaction between symptoms and the
+#trophic level of the individual in question
 ```
 
