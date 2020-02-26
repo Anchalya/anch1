@@ -1,0 +1,179 @@
+---
+title: "Homework 3"
+author: "Anchalya"
+date: "08/02/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+##Part I
+#Q1:Enter the data into R or read in the killarney.csv file found on My Learning Space under the “homework” section.
+```{r}
+kill <- read.csv("Killarney.csv")
+kill
+```
+
+#Q2: Make a box plot of the species diversity by lake status (acidic, recovered, andneutral). From the boxplot does it look like there are any differences in plankton diversity among the lake types?
+```{r}
+
+#Box plot:
+boxplot(kill$Diversity~kill$status,
+main = "Boxplot of the species diversities by lake status",
+xlab = "Status",
+ylab = "Diversity",
+col = "orange",
+border = "brown"
+)
+#from looking at my boxplot, I am recognizing that there are differenceses in plankton diversity among the lake types. the acidic lakes are not as diverse as neutral or recovered. 
+```
+#Q3:Run an ANOVA in R to test for differences in species diversity among the #threelake types. Display the summary output in your answer
+```{r}
+
+my.aov=aov(Diversity~status,data=kill) 
+summary(my.aov)
+```
+#Q4: What is the appropriate null hypothesis for the ANOVA you just ran?
+```{r}
+
+#the null hypthesis would be that the Mean is the same for all groups.
+
+```
+#Q5:What is the observed test statistic and p-value for the test?
+```{r}
+
+#F-value=16.41 and p-value: 5.43e-06
+```
+#Q6:Did species diversity differ among these three lake types?
+```{r}
+#yes the species diversity did differ among these three lake types and you can see this by viewing the boxplot. Acidic lake has a very low diversity
+```
+#Q7:To determine which groups were significantly different from one another, run the appropriate follow-up test (Tukey tests). Provide the output from that test.
+```{r}
+
+
+TukeyHSD(my.aov)
+```
+#Q8:Based on your follow-up test, which groups are significantly different from one another?
+```{r}
+#The acidic group is significantly different from the others.
+```
+#Q9: Does the Killarney data set meet the assumptions required for an ANOVA? Perform a Shapiro-Wilk’s test to examine if the residuals of the fitted model are normally distributed and Levene’s test to test for homogeneity of variances.
+```{r}
+#the data set does meet the assumptions requred for an anova
+# after running the Shapiro-Wilk's test, it is noted that the residuals of the fitted model are not normally distributed.
+
+
+shapiro.test(residuals(my.aov))
+hist(residuals(my.aov))
+
+library(car)
+leveneTest(my.aov)
+```
+
+#reading esosph file into R
+```{r}
+esoph <- read.csv("esoph.csv")
+```
+
+```{r}
+esoph
+
+```
+
+#Q10: Run a two-factor ANOVA in R to determine if the number of cancer cases depends on alcohol consumption, tobacco consumption, or their interaction.a) Provide the ANOVA table from the analysis.b) What is your conclusion about the effects of Alcohol and Tobacco based on this analysis? Explain with reference to your ANOVA table.
+```{r}
+#A
+my.fit=aov(ncases~Alcohol*Tobacco,data=esoph)
+summary(my.fit)
+#B
+#my conclusion about the effects of alcohol and tobacco based on my analysis is that they are both not significant. The F-value for alcohol is 2.085 and the p-value is 0.110. because P-value is greater than 0.05, we can conclude that the effects of alcoholis not significant in therms of the cancer cases.the same can be said about tobacco as its P-value is also greater than 0.05. the third line indicates the effect of the interaction between the two, and as you can see the P value is greater than 0.05. therefore, we can conclude that is not an interaction between the two effects and number of cancer cases.    
+```
+
+#Q11:The previous analysis did not include age as a factor. Now run a two-factor ANOVA to determine if the number of cases of esophageal cancer depends on age, tobacco use, or their interaction. a) Provide the ANOVA table from the analysis. b) Run a Tukey test to determine which groups are significantly different. 
+```{r}
+#a)
+my.fitaov=aov(ncases~Age*Tobacco,data=esoph)
+summary(my.fitaov)
+#b)
+TukeyHSD(my.fitaov)
+```
+#Q12: How do age and alcohol consumption influence esophageal cancer rates? To test this, run a two-factor ANOVA to determine if the number of cases ofesophageal cancer depends on age, alcohol consumption, or their interaction.a) Provide the ANOVA table from the analysis.b) Make an interaction plot to examine the results. Provide this interaction plot with your homework submission.c)What is your conclusion about the effects of age and alcohol consumptionbased on this analysis? Explain with reference to your ANOVA table andyour interaction plot.
+```{r}
+#a)
+my.fitaova=aov(ncases~Age*Alcohol,data=esoph)
+summary(my.fitaova)
+#P-value is less than 0.05 making this interaction significant in terms of influencing number of cancer cases
+#b)
+interaction.plot(Age,Alcohol,ncases)
+#c) my conclusion about the effects of age and alcohol consumption based on my analysis is that it does influence the number of cancer cases. as you can see from the ANOVA table, the Pvalue is smaller than 0.05, which means we conclude that the influence ncases.
+```
+
+#Part II
+#Q13.a) Make a scatterplot of weight (x-axis) versus fuel mileage (y-axis). Does fuelmileage seem to depend on weight?b) Perform a linear regression to determine if weight has an impact on fuelmileage.c) Add a blue line to the scatterplot indicating the fit of the linear regression. What is the equation of this line based on your linear regression results?d) Is gas mileage significantly related to car weight? Provide the p-value from the regression results.
+```{r}
+mtcars
+?mtcars
+#a)
+plot(mtcars$mpg~mtcars$wt,main='Scatterplot of Weight VS Fuel mileage in 1974 Motor Trend US magazine',xlab='Weight',
+ylab='Fuel Mileage')
+#it seems that fuelmilage depends on weight. 
+#B
+my.fit=glm(mtcars$mpg~mtcars$wt) 
+summary(my.fit)
+abline(my.fit,col="blue")
+#The equation of this line based on my linear regression is y=37.28-5.334x
+#D
+#the P-value is 1.29e-10. Gas milage ssignificantly related to car weight.
+```
+
+#Q14:Make a scatterplot of horsepower (x-axis) versus quarter mile time (y-axis).Does quarter mile time seem to depend on horsepower?#b) Perform a linear regression to determine if horsepower has an impact onquarter mile time.c) Add a blue line to the scatterplot indicating the fit of the linear regression.What is the equation of this line based on your linear regression results? d) What would be the quarter mile time for a car with 300 horsepoweraccording to your regression fit? Provide the answer to two decimal places(hint: use the answer to c).e) Is gas mileage significantly related to car weight? Provide the p-value fromthe regression results.f) Use the gvlma function to determine if the assumptions of a linear regression were met. Provide the output from the gvlma analysis. Did this data meet the required assumptions?
+```{r}
+#A)
+mtcars
+?mtcars
+plot(mtcars$qsec~mtcars$hp,main='Scatterplot of Horsepower VS Quater Mile Time in 1974 Motor Trend US magazine',xlab='Horsepower',
+ylab='Quarter Mile Time')
+#quarter mile time depends on horsepower.
+#B/C
+my.fit2=glm(mtcars$qsec~mtcars$hp)
+summary(my.fit2)
+abline(my.fit2,col='blue')
+#horsepower has an impact on quarter mile time.
+#y=20.556354-0.018458x
+
+#D
+#y=a+bx
+#y=20.556354-0.018458x
+#y=20.556354-0.018458(300)
+#y=20.556354-5.5374
+#Y=15.02
+#E)It is significant because p-value=2x10^-16 which is smaller than 0.05
+#F
+library(gvlma)
+gvlma(lm(my.fit2))
+#the assumptions for global stat, skewness, link function, and heteroscedasticity are acceptable but not met only for kurtosis. 
+
+
+```
+
+
+```{r}
+
+```
+
+#Q15: a) Find two variables that you think might be correlated. You can find this data by Googling for it or using data that you already have access to.BI 612 b) Plot the relationship between the two variables using a scatterplot. c) Test for a correlation in R. What is the correlation coefficient? d) Is the correlation significant? Provide the p-value from the test.
+```{r}
+#A)
+mtcars
+#B)
+mtcars
+plot(mtcars$mpg~mtcars$wt,main='Scatterplot of Weight VS Fuel mileage in 1974 Motor Trend US magazine',xlab='Weight',
+ylab='Fuel Mileage')
+#C)
+cor.test(mtcars$mpg,mtcars$wt)
+#the correlation coefficient is 0.8676594
+#D) The P-Value from the test is 1.29e-10. because the p-value is less than 0.05, it is statistically significant, suggesting that the null hypothesis is correct, therefore, the correlation is significant. 
+```
+
